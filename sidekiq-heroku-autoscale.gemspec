@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Greg MacWilliam', 'Justin Love']
   s.summary     = 'Start, stop, and scale Sidekiq dynos on Heroku based on workload'
   s.description = s.summary
-  s.homepage    = 'https://github.com/gmac/sidekiq-heroku-autoscale'
+  s.homepage    = 'https://github.com/happy-technology/sidekiq-heroku-autoscale'
   s.licenses    = ['MIT']
 
   s.add_dependency 'sidekiq', '>= 5.0'
