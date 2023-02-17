@@ -226,11 +226,11 @@ module Sidekiq
         end
 
         ::Sidekiq.redis do |c|
-          c.pipelined do
+          c.pipelined do |pipelined|
             # set new keys, delete expired keys
             del, set = cache.partition { |k, v| v.nil? }
-            c.hmset(cache_key, *set.flatten) if set.any?
-            c.hdel(cache_key, *del.map(&:first)) if del.any?
+            pipelined.hmset(cache_key, *set.flatten) if set.any?
+            pipelined.hdel(cache_key, *del.map(&:first)) if del.any?
 
             if attrs[:history_at]
               # set a dyno count history marker
@@ -238,8 +238,8 @@ module Sidekiq
               history_page = (attrs[:history_at].to_f / @history).floor * @history
               history_key = "#{ cache_key }:#{ history_page }"
 
-              c.hmset(history_key, (event_time - @throttle).to_s, prev_dynos, event_time.to_s, @dynos)
-              c.expire(history_key, @history * 2)
+              pipelined.hmset(history_key, (event_time - @throttle).to_s, prev_dynos, event_time.to_s, @dynos)
+              pipelined.expire(history_key, @history * 2)
             end
           end
         end
