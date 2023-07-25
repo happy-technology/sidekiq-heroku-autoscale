@@ -9,7 +9,7 @@ module Sidekiq
       def call(worker_class, item, queue, _=nil)
         result = yield
 
-        if process = @app.process_for_queue(queue)
+        if (process = @app.process_for_queue(queue))
           process.ping!
         end
 
